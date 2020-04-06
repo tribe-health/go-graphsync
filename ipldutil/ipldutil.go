@@ -28,11 +28,8 @@ var (
 	})
 )
 
-func Traverse(ctx context.Context, loader ipld.Loader, chooser traversal.NodeBuilderChooser, root ipld.Link, s selector.Selector, fn traversal.AdvVisitFn) error {
-	if chooser == nil {
-		chooser = defaultChooser
-	}
-	builder := chooser(root, ipld.LinkContext{})
+func Traverse(ctx context.Context, loader ipld.Loader, root ipld.Link, s selector.Selector, fn traversal.AdvVisitFn) error {
+	builder := defaultChooser(root, ipld.LinkContext{})
 	node, err := root.Load(ctx, ipld.LinkContext{}, builder, loader)
 	if err != nil {
 		return err
@@ -41,7 +38,7 @@ func Traverse(ctx context.Context, loader ipld.Loader, chooser traversal.NodeBui
 		Cfg: &traversal.Config{
 			Ctx:                    ctx,
 			LinkLoader:             loader,
-			LinkNodeBuilderChooser: chooser,
+			LinkNodeBuilderChooser: defaultChooser,
 		},
 	}.WalkAdv(node, s, fn)
 }
