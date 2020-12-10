@@ -563,8 +563,9 @@ func (r reqSubscriber) OnClose(topic notifications.Topic) {
 }
 
 func (rm *RequestManager) sendRequest(p peer.ID, request gsmsg.GraphSyncRequest) {
-	sub := notifications.NewMappableSubscriber(&reqSubscriber{p, request, rm.networkErrorListeners}, notifications.IdentityTransform)
-	failNotifee := notifications.Notifee{Topic: messagequeue.Error, Subscriber: sub}
+	sub := notifications.NewTopicDataSubscriber(&reqSubscriber{
+		p, request, rm.networkErrorListeners})
+	failNotifee := notifications.Notifee{Data: messagequeue.Error, Subscriber: sub}
 	rm.peerHandler.SendRequest(p, request, failNotifee)
 }
 
