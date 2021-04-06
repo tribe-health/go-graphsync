@@ -319,5 +319,6 @@ func (gsr *graphSyncReceiver) Connected(p peer.ID) {
 // Connected is part of the networks 's Receiver interface and handles peers connecting
 // on the network
 func (gsr *graphSyncReceiver) Disconnected(p peer.ID) {
+	gsr.graphSync().requestManager.Disconnected(p)
 	gsr.graphSync().peerManager.Disconnected(p)
 }
